@@ -1,3 +1,6 @@
+mod day1;
+use crate::day1::day1_main;
+
 fn main() {
-    println!("Hello, world!");
+    day1_main().expect("Error");
 }
