@@ -9,33 +9,45 @@ pub fn day2_main() -> io::Result<()> {
     reader.read_line(&mut first_line)?;
 
     let ranges: Vec<&str> = first_line.split(',').collect();
-    let mut _sum: u64 = 0;
+    let mut sum: u64 = 0;
     for range in ranges {
-        let _ = get_invalid_id(range);
+        let invalid_ids = get_invalid_id(range);
+        print!("number of invalid_ids : {}\n", invalid_ids.len());
+        print!("Invalid IDs\n : ");
+        for id in invalid_ids {
+            print!("{} - ", id);
+            sum += id;
+        }
+        print!("\n");
     }
+    print!("The final sum is {sum}\n");
 
     Ok(())
 }
 
-fn get_invalid_id(range: &str) {
+fn get_invalid_id(range: &str) -> Vec<u64> {
     let numbers: Vec<&str> = range.split('-').collect();
-    for number in numbers {
-        print!("number: {number}\n");
+    let number1: u64 = numbers[0].parse().unwrap();
+    let number2: u64 = numbers[1].trim().parse().unwrap();
+    let mut invalid_ids: Vec<u64> = vec![];
+    for i in number1..number2 + 1 {
+        let s_i = i.to_string();
+        if repeating_characters(&s_i) {
+            let s_i_number: u64 = s_i.parse().unwrap();
+            invalid_ids.push(s_i_number);
+        }
     }
-    // let number1: i32 = numbers[0].parse().unwrap();
-    // let number2: i32 = numbers[1].parse().unwrap();
-    // let mut invalid_ids: Vec<i32> = vec![];
-    // for i in number1..number2 {
-    //     let s_i = i.to_string();
-    //     if repeating_characters(&s_i) {
-    //         let s_i_number: i32 = s_i.parse().unwrap();
-    //         invalid_ids.push(s_i_number);
-    //     }
-    // }
+    return invalid_ids;
 }
 fn repeating_characters(s_i: &String) -> bool {
-    for c in s_i.chars() {
-        print!("c : {c}i\n");
+    if s_i.len() % 2 != 0 {
+        return false;
+    }
+    let mid = s_i.chars().count() / 2;
+    let (left, right) = s_i.split_at(mid);
+
+    if left != right {
+        return false;
     }
     return true;
 }
