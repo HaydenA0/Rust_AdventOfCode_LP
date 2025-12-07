@@ -32,22 +32,23 @@ fn get_invalid_id(range: &str) -> Vec<u64> {
     let mut invalid_ids: Vec<u64> = vec![];
     for i in number1..number2 + 1 {
         let s_i = i.to_string();
-        if repeating_characters(&s_i) {
+        if repeating_sub_strings(&s_i) {
             let s_i_number: u64 = s_i.parse().unwrap();
             invalid_ids.push(s_i_number);
         }
     }
     return invalid_ids;
 }
-fn repeating_characters(s_i: &String) -> bool {
-    if s_i.len() % 2 != 0 {
-        return false;
+fn repeating_sub_strings(s_i: &String) -> bool {
+    let possible_substrings_lengths: Vec<usize> = (1..s_i.len() / 2 + 1).collect();
+    for length in possible_substrings_lengths {
+        if s_i.len() % length == 0 {
+            let slice = &s_i[..length];
+            let repeated_slice = slice.repeat(s_i.len() / length);
+            if repeated_slice == s_i.to_string() {
+                return true;
+            }
+        }
     }
-    let mid = s_i.chars().count() / 2;
-    let (left, right) = s_i.split_at(mid);
-
-    if left != right {
-        return false;
-    }
-    return true;
+    return false;
 }
